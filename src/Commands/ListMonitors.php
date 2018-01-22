@@ -9,6 +9,8 @@ use Spatie\UptimeMonitor\Commands\MonitorLists\Unchecked;
 use Spatie\UptimeMonitor\Commands\MonitorLists\UptimeCheckFailed;
 use Spatie\UptimeMonitor\Commands\MonitorLists\CertificateCheckFailed;
 
+use Spatie\UptimeMonitor\Models\Monitor;
+
 class ListMonitors extends BaseCommand
 {
     protected $signature = 'monitor:list {--api}';
