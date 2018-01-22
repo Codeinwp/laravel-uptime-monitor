@@ -39,7 +39,11 @@ class ListMonitors extends BaseCommand
 			    return compact( 'url','email', 'reachable', 'onlineSince' );
 		    });
 
-		    echo json_encode( $results, true );
+		    echo json_encode( array(
+		    	'status' => 200,
+			    'message' => 'Ok',
+			    'data' => $results
+		    ), true );
 		    return;
 	    }
 

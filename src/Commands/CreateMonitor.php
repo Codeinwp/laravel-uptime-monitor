@@ -7,13 +7,14 @@ use Spatie\UptimeMonitor\Models\Monitor;
 
 class CreateMonitor extends BaseCommand
 {
-    protected $signature = 'monitor:create {url} {--api} {--string=}';
+    protected $signature = 'monitor:create {url} {--api} {--string=} {--email=}';
 
     protected $description = 'Create a monitor';
 
     public function handle()
     {
         $url = Url::fromString($this->argument('url'));
+        $email = $this->option('email');
 
         if (! in_array($url->getScheme(), ['http', 'https'])) {
             if ($scheme = $this->choice("Which protocol needs to be used for checking `{$url}`?", [1 => 'https', 2 => 'http'], 1)) {
@@ -27,21 +28,41 @@ class CreateMonitor extends BaseCommand
 		    if ( isset( $string ) && $string != '' ) {
 			    $lookForString = $string;
 		    }
+
+		    if ( ! isset( $email ) || $email === '' ) {
+			    return json_encode( array(
+				    'status' => 401,
+				    'message' => "No email provided."
+			    ), true );
+		    }
 	    } else {
 		    if ($this->confirm('Should we look for a specific string on the response?')) {
 			    $lookForString = $this->ask('Which string?');
 		    }
 	    }
 
-        $monitor = Monitor::create([
-            'url' => trim($url, '/'),
-            'email' => trim( 'bogdan.preda@themeisle.com' ),
-            'look_for_string' => $lookForString ?? '',
-            'uptime_check_method' => isset($lookForString) ? 'get' : 'head',
-            'certificate_check_enabled' => $url->getScheme() === 'https',
-            'uptime_check_interval_in_minutes' => config('uptime-monitor.uptime_check.run_interval_in_minutes'),
-        ]);
+	    try {
+		    $monitor = Monitor::create( [
+			    'url'                              => trim( $url, '/' ),
+			    'email'                            => trim( $email ),
+			    'look_for_string'                  => $lookForString ?? '',
+			    'uptime_check_method'              => isset( $lookForString ) ? 'get' : 'head',
+			    'certificate_check_enabled'        => $url->getScheme() === 'https',
+			    'uptime_check_interval_in_minutes' => config( 'uptime-monitor.uptime_check.run_interval_in_minutes' ),
+		    ] );
 
-        $this->warn("{$monitor->url} will be monitored!");
+		    if( isset( $isApiCall ) && $isApiCall == true ) {
+		    	return json_encode( array(
+		    		'status' => 200,
+				    'message' => "{$monitor->url} will be monitored!"
+			    ), true );
+		    }
+		    $this->warn("{$monitor->url} will be monitored!");
+	    } catch ( \Exception $e ) {
+		    return json_encode( array(
+			    'status' => 500,
+			    'message' => $e->getMessage()
+		    ), true );
+	    }
     }
 }

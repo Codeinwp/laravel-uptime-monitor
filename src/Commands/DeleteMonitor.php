@@ -6,7 +6,7 @@ use Spatie\UptimeMonitor\Models\Monitor;
 
 class DeleteMonitor extends BaseCommand
 {
-    protected $signature = 'monitor:delete {url}';
+    protected $signature = 'monitor:delete {url} {--api}';
 
     protected $description = 'Delete a monitor';
 
@@ -16,16 +16,40 @@ class DeleteMonitor extends BaseCommand
 
         $monitor = Monitor::where('url', $url)->first();
 
-        if (! $monitor) {
-            $this->error("Monitor {$url} is not configured");
+	    $isApiCall = $this->option('api');
 
-            return;
-        }
+	    if( isset( $isApiCall ) && $isApiCall == true ) {
+		    if (! $monitor) {
+		    	return json_encode( array(
+		    		'status' => 401,
+				    'message' => "Monitor {$url} is not configured"
+			    ), true );
+		    }
 
-        if ($this->confirm("Are you sure you want stop monitoring {$monitor->url}?")) {
-            $monitor->delete();
+		    try {
+			    $monitor->delete();
+			    return json_encode( array(
+				    'status' => 200,
+				    'message' => "{$monitor->url} will not be monitored anymore"
+			    ), true );
+		    } catch ( \Exception $e ) {
+			    return json_encode( array(
+				    'status' => 500,
+				    'message' => $e->getMessage()
+			    ), true );
+		    }
+	    } else {
+	        if (! $monitor) {
+	            $this->error("Monitor {$url} is not configured");
 
-            $this->warn("{$monitor->url} will not be monitored anymore");
-        }
+	            return;
+	        }
+
+		    if ($this->confirm("Are you sure you want stop monitoring {$monitor->url}?")) {
+			    $monitor->delete();
+
+			    $this->warn("{$monitor->url} will not be monitored anymore");
+		    }
+	    }
     }
 }
