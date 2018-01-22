@@ -19,12 +19,23 @@ class ListMonitors extends BaseCommand
     {
         $this->line('');
 
+	    $isApiCall = $this->option('api');
+
         if (! MonitorRepository::getEnabled()->count()) {
-            $this->warn('There are no monitors created or enabled.');
-            $this->info('You create a monitor using the `monitor:create {url}` command');
+	        if( isset( $isApiCall ) && $isApiCall == true ) {
+		        return json_encode( array(
+			        'status' => 200,
+			        'message' => 'There are no monitors created or enabled. You create a monitor using the `monitor:create {url}` command',
+			        'data' => array()
+		        ), true );
+	        } else {
+		        $this->warn('There are no monitors created or enabled.');
+		        $this->info('You create a monitor using the `monitor:create {url}` command');
+	        }
+
         }
 
-	    $isApiCall = $this->option('api');
+
 	    if( isset( $isApiCall ) && $isApiCall == true ) {
 		    $healthyMonitor = MonitorRepository::getEnabled();
 
@@ -39,12 +50,11 @@ class ListMonitors extends BaseCommand
 			    return compact( 'url','email', 'reachable', 'onlineSince' );
 		    });
 
-		    echo json_encode( array(
+		    return json_encode( array(
 		    	'status' => 200,
 			    'message' => 'Ok',
 			    'data' => $results
 		    ), true );
-		    return;
 	    }
 
         Unchecked::display();
