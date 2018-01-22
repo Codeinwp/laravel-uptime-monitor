@@ -25,6 +25,7 @@ class UptimeCheckFailed extends BaseNotification
     {
         $mailMessage = (new MailMessage)
             ->error()
+	        ->to( $this->getEmail() )
             ->subject($this->getMessageText())
             ->line($this->getMessageText())
             ->line($this->getLocationDescription());
@@ -74,6 +75,11 @@ class UptimeCheckFailed extends BaseNotification
 
         return $this;
     }
+
+	protected function getEmail(): string
+	{
+		return $this->event->monitor->email;
+	}
 
     protected function getMessageText(): string
     {

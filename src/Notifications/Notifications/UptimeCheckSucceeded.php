@@ -24,6 +24,7 @@ class UptimeCheckSucceeded extends BaseNotification
     public function toMail($notifiable)
     {
         $mailMessage = (new MailMessage)
+	        ->to( $this->getEmail() )
             ->subject($this->getMessageText())
             ->line($this->getMessageText())
             ->line($this->getLocationDescription());
@@ -58,6 +59,11 @@ class UptimeCheckSucceeded extends BaseNotification
 
         return $this;
     }
+
+	protected function getEmail(): string
+	{
+		return $this->event->monitor->email;
+	}
 
     public function getMessageText(): string
     {

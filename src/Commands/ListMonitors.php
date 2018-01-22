@@ -11,7 +11,7 @@ use Spatie\UptimeMonitor\Commands\MonitorLists\CertificateCheckFailed;
 
 class ListMonitors extends BaseCommand
 {
-    protected $signature = 'monitor:list';
+    protected $signature = 'monitor:list {--api}';
 
     protected $description = 'List all monitors';
 
@@ -23,6 +23,25 @@ class ListMonitors extends BaseCommand
             $this->warn('There are no monitors created or enabled.');
             $this->info('You create a monitor using the `monitor:create {url}` command');
         }
+
+	    $isApiCall = $this->option('api');
+	    if( isset( $isApiCall ) && $isApiCall == true ) {
+		    $healthyMonitor = MonitorRepository::getEnabled();
+
+		    $results = $healthyMonitor->map(function (Monitor $monitor) {
+			    $url = (string) $monitor->url;
+			    $email = (string) $monitor->email;
+
+			    $reachable = $monitor->uptime_status;
+
+			    $onlineSince = $monitor->formattedLastUpdatedStatusChangeDate('forHumans');
+
+			    return compact( 'url','email', 'reachable', 'onlineSince' );
+		    });
+
+		    echo json_encode( $results, true );
+		    return;
+	    }
 
         Unchecked::display();
         Disabled::display();

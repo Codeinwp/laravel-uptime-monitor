@@ -25,6 +25,7 @@ class UptimeCheckRecovered extends BaseNotification
     {
         $mailMessage = (new MailMessage)
             ->success()
+	        ->to( $this->getEmail() )
             ->subject($this->getMessageText())
             ->line($this->getMessageText())
             ->line($this->getLocationDescription());
@@ -62,6 +63,11 @@ class UptimeCheckRecovered extends BaseNotification
     {
         return $this->event->monitor->uptime_status == UptimeStatus::UP;
     }
+
+	protected function getEmail(): string
+	{
+		return $this->event->monitor->email;
+	}
 
     public function setEvent(MonitorRecoveredEvent $event)
     {

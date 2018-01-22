@@ -1,11 +1,10 @@
 {
-    "name": "spatie/laravel-uptime-monitor",
-    "description": "A powerful, easy to configure uptime monitor",
+    "name": "preda-bogdan/laravel-uptime-monitor",
+    "description": "Uptime Monitor SaaS service. Based on spatie/laravel-uptime-monitor",
     "keywords": [
-        "spatie",
         "laravel-uptime-monitor"
     ],
-    "homepage": "https://github.com/spatie/laravel-uptime-monitor",
+    "homepage": "https://github.com/preda-bogdan/laravel-uptime-monitor",
     "license": "MIT",
     "authors": [
         {
@@ -13,6 +12,12 @@
             "email": "freek@spatie.be",
             "homepage": "https://spatie.be",
             "role": "Developer"
+        },
+        {
+          "name": "Bogdan Preda",
+          "email": "preda-bogdan@themeisle.com",
+          "homepage": "https://themeisle.com",
+          "role": "Developer"
         }
     ],
     "require": {

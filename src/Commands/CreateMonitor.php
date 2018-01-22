@@ -7,7 +7,7 @@ use Spatie\UptimeMonitor\Models\Monitor;
 
 class CreateMonitor extends BaseCommand
 {
-    protected $signature = 'monitor:create {url}';
+    protected $signature = 'monitor:create {url} {--api} {--string=}';
 
     protected $description = 'Create a monitor';
 
@@ -21,12 +21,21 @@ class CreateMonitor extends BaseCommand
             }
         }
 
-        if ($this->confirm('Should we look for a specific string on the response?')) {
-            $lookForString = $this->ask('Which string?');
-        }
+	    $isApiCall = $this->option('api');
+	    $string = $this->option('string');
+	    if( isset( $isApiCall ) && $isApiCall == true ) {
+		    if ( isset( $string ) && $string != '' ) {
+			    $lookForString = $string;
+		    }
+	    } else {
+		    if ($this->confirm('Should we look for a specific string on the response?')) {
+			    $lookForString = $this->ask('Which string?');
+		    }
+	    }
 
         $monitor = Monitor::create([
             'url' => trim($url, '/'),
+            'email' => trim( 'bogdan.preda@themeisle.com' ),
             'look_for_string' => $lookForString ?? '',
             'uptime_check_method' => isset($lookForString) ? 'get' : 'head',
             'certificate_check_enabled' => $url->getScheme() === 'https',

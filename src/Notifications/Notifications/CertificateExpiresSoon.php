@@ -24,6 +24,7 @@ class CertificateExpiresSoon extends BaseNotification
     {
         $mailMessage = (new MailMessage)
             ->error()
+	        ->to( $this->getEmail() )
             ->subject($this->getMessageText())
             ->line($this->getMessageText());
 
@@ -54,6 +55,11 @@ class CertificateExpiresSoon extends BaseNotification
 
         return $this;
     }
+
+	protected function getEmail(): string
+	{
+		return $this->event->monitor->email;
+	}
 
     protected function getMessageText(): string
     {
