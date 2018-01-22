@@ -30,10 +30,11 @@ class CreateMonitor extends BaseCommand
 		    }
 
 		    if ( ! isset( $email ) || $email === '' ) {
-			    return json_encode( array(
+			    echo json_encode( array(
 				    'status' => 401,
 				    'message' => "No email provided."
 			    ), true );
+			    return;
 		    }
 	    } else {
 		    if ($this->confirm('Should we look for a specific string on the response?')) {
@@ -52,17 +53,19 @@ class CreateMonitor extends BaseCommand
 		    ] );
 
 		    if( isset( $isApiCall ) && $isApiCall == true ) {
-		    	return json_encode( array(
+		    	echo json_encode( array(
 		    		'status' => 200,
 				    'message' => "{$monitor->url} will be monitored!"
 			    ), true );
+		    	return;
 		    }
 		    $this->warn("{$monitor->url} will be monitored!");
 	    } catch ( \Exception $e ) {
-		    return json_encode( array(
+		    echo json_encode( array(
 			    'status' => 500,
 			    'message' => $e->getMessage()
 		    ), true );
+		    return;
 	    }
     }
 }

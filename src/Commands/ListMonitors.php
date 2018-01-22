@@ -23,11 +23,12 @@ class ListMonitors extends BaseCommand
 
         if (! MonitorRepository::getEnabled()->count()) {
 	        if( isset( $isApiCall ) && $isApiCall == true ) {
-		        return json_encode( array(
+		        echo json_encode( array(
 			        'status' => 200,
 			        'message' => 'There are no monitors created or enabled. You create a monitor using the `monitor:create {url}` command',
 			        'data' => array()
 		        ), true );
+		        return;
 	        } else {
 		        $this->warn('There are no monitors created or enabled.');
 		        $this->info('You create a monitor using the `monitor:create {url}` command');
@@ -50,11 +51,12 @@ class ListMonitors extends BaseCommand
 			    return compact( 'url','email', 'reachable', 'onlineSince' );
 		    });
 
-		    return json_encode( array(
+		    echo json_encode( array(
 		    	'status' => 200,
 			    'message' => 'Ok',
 			    'data' => $results
 		    ), true );
+		    return;
 	    }
 
         Unchecked::display();

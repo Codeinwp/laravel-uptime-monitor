@@ -20,28 +20,30 @@ class DeleteMonitor extends BaseCommand
 
 	    if( isset( $isApiCall ) && $isApiCall == true ) {
 		    if (! $monitor) {
-		    	return json_encode( array(
+		    	echo json_encode( array(
 		    		'status' => 401,
 				    'message' => "Monitor {$url} is not configured"
 			    ), true );
+		    	return;
 		    }
 
 		    try {
 			    $monitor->delete();
-			    return json_encode( array(
+			    echo json_encode( array(
 				    'status' => 200,
 				    'message' => "{$monitor->url} will not be monitored anymore"
 			    ), true );
+			    return;
 		    } catch ( \Exception $e ) {
-			    return json_encode( array(
+			    echo json_encode( array(
 				    'status' => 500,
 				    'message' => $e->getMessage()
 			    ), true );
+			    return;
 		    }
 	    } else {
 	        if (! $monitor) {
 	            $this->error("Monitor {$url} is not configured");
-
 	            return;
 	        }
 
