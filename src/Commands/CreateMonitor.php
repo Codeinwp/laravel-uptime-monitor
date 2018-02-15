@@ -29,6 +29,14 @@ class CreateMonitor extends BaseCommand
 			    $lookForString = $string;
 		    }
 
+		    if ( in_array($url->getHost(), ['localhost', '127.0.0.1']) ) {
+			    echo json_encode( array(
+				    'status' => 401,
+				    'message' => "Localhost is not allowed."
+			    ), true );
+			    return;
+		    }
+
 		    if ( ! isset( $email ) || $email === '' ) {
 			    echo json_encode( array(
 				    'status' => 401,
