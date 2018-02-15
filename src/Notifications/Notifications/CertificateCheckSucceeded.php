@@ -30,7 +30,7 @@ class CertificateCheckSucceeded extends BaseNotification
         foreach ($this->getMonitorProperties() as $name => $value) {
             $mailMessage->line($name.': '.$value);
         }
-	    $mailMessage->view('emails.uptime.up');
+	    $mailMessage->view('emails_uptime_up');
         return $mailMessage;
     }
 
