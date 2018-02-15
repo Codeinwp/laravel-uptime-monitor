@@ -43,7 +43,7 @@ class CreateMonitor extends BaseCommand
 	    }
 
 	    try {
-		    $monitor = Monitor::create( [
+		    $monitor = Monitor::firstOrCreate( [
 			    'url'                              => trim( $url, '/' ),
 			    'email'                            => trim( $email ),
 			    'look_for_string'                  => $lookForString ?? '',
