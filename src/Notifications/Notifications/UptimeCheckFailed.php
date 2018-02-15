@@ -3,7 +3,7 @@
 namespace Spatie\UptimeMonitor\Notifications\Notifications;
 
 use Carbon\Carbon;
-use Illuminate\Notifications\Messages\MailMessage;
+use Spatie\UptimeMonitor\Notifications\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Spatie\UptimeMonitor\Models\Enums\UptimeStatus;
 use Illuminate\Notifications\Messages\SlackAttachment;

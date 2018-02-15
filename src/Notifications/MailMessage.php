@@ -1,6 +1,8 @@
 <?php
 namespace Spatie\UptimeMonitor\Notifications;
 
+use Illuminate\Notifications\Messages\SimpleMessage;
+
 class MailMessage extends SimpleMessage
 {
 	/**
