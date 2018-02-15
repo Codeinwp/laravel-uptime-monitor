@@ -55,6 +55,7 @@ class UptimeMonitorServiceProvider extends ServiceProvider
         $this->app->bind('command.monitor:enable', EnableMonitor::class);
         $this->app->bind('command.monitor:disable', DisableMonitor::class);
         $this->app->bind('command.monitor:list', ListMonitors::class);
+        $this->app->bind('command.monitor:status', StatusMonitors::class);
 
         $this->app->bind(
             UptimeResponseChecker::class,
@@ -70,6 +71,7 @@ class UptimeMonitorServiceProvider extends ServiceProvider
             'command.monitor:enable',
             'command.monitor:disable',
             'command.monitor:list',
+            'command.monitor:status',
         ]);
     }
 }
