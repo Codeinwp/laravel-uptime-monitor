@@ -31,7 +31,7 @@ class CertificateCheckFailed extends BaseNotification
         foreach ($this->getMonitorProperties() as $name => $value) {
             $mailMessage->line($name.': '.$value);
         }
-	    $mailMessage->view('emails_uptime_down');
+	    $mailMessage->markdow('emails_uptime_down');
         return $mailMessage;
     }
 
