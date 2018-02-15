@@ -5,12 +5,21 @@ namespace Spatie\UptimeMonitor;
 use Illuminate\Support\Collection;
 use Spatie\UptimeMonitor\Models\Monitor;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Spatie\UptimeMonitor\Models\Enums\UptimeStatus;
 use Spatie\UptimeMonitor\Models\Enums\CertificateStatus;
 use Spatie\UptimeMonitor\Exceptions\InvalidConfiguration;
 
 class MonitorRepository
 {
+	public static function getStatus(): Collection
+	{
+		$modelClass = static::determineMonitorModel();
+		$monitors = $modelClass::select( DB::raw('COUNT(*) as total, SUM(uptime_check_enabled) as active, MIN(uptime_last_check_date) as last_checked_date') )->get();
+
+		return MonitorCollection::make($monitors);
+	}
+
     public static function getEnabled(): Collection
     {
         $monitors = self::query()->get();

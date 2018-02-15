@@ -23,7 +23,7 @@ class StatusMonitors extends BaseCommand
 
 	    $isApiCall = $this->option('api');
 
-        if (! MonitorRepository::getEnabled()->count()) {
+        if (! MonitorRepository::getStatus()->count()) {
 	        if( isset( $isApiCall ) && $isApiCall == true ) {
 		        echo json_encode( array(
 			        'status' => 200,
@@ -40,17 +40,14 @@ class StatusMonitors extends BaseCommand
 
 
 	    if( isset( $isApiCall ) && $isApiCall == true ) {
-		    $healthyMonitor = MonitorRepository::getEnabled();
+		    $statusMonitor = MonitorRepository::getStatus();
 
-		    $results = $healthyMonitor->map(function (Monitor $monitor) {
-			    $url = (string) $monitor->url;
-			    $email = (string) $monitor->email;
+		    $results = $statusMonitor->map(function (Monitor $monitor) {
+			    $total = (string) $monitor->total;
+			    $active = (string) $monitor->active;
+			    $last = $monitor->last_checked_date;
 
-			    $reachable = $monitor->uptime_status;
-
-			    $onlineSince = $monitor->formattedLastUpdatedStatusChangeDate('forHumans');
-
-			    return compact( 'url','email', 'reachable', 'onlineSince' );
+			    return compact( 'total','active', 'last' );
 		    });
 
 		    echo json_encode( array(
@@ -60,11 +57,5 @@ class StatusMonitors extends BaseCommand
 		    ), true );
 		    return;
 	    }
-
-        Unchecked::display();
-        Disabled::display();
-        UptimeCheckFailed::display();
-        CertificateCheckFailed::display();
-        Healthy::display();
     }
 }
