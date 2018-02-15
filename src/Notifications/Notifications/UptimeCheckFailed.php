@@ -34,6 +34,7 @@ class UptimeCheckFailed extends BaseNotification
             $mailMessage->line($name.': '.$value);
         }
 
+	    $mailMessage->view('emails.uptime.down');
         return $mailMessage;
     }
 
