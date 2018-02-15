@@ -43,23 +43,40 @@ class CreateMonitor extends BaseCommand
 	    }
 
 	    try {
-		    $monitor = Monitor::firstOrCreate( [
-			    'url'                              => trim( $url, '/' ),
-			    'email'                            => trim( $email ),
-			    'look_for_string'                  => $lookForString ?? '',
-			    'uptime_check_method'              => isset( $lookForString ) ? 'get' : 'head',
-			    'certificate_check_enabled'        => $url->getScheme() === 'https',
-			    'uptime_check_interval_in_minutes' => config( 'uptime-monitor.uptime_check.run_interval_in_minutes' ),
-		    ] );
+		    $monitor = Monitor::where('url', $url)->where('email', '<>', trim( $email ))->first();
+		    if ( $monitor ) {
+			    $monitor = Monitor::where('url', $url)->update( [ 'email' => trim( $email ) ] );
 
-		    if( isset( $isApiCall ) && $isApiCall == true ) {
-		    	echo json_encode( array(
-		    		'status' => 200,
-				    'message' => "{$monitor->url} will be monitored!"
-			    ), true );
-		    	return;
+			    if ( isset( $isApiCall ) && $isApiCall == true ) {
+				    echo json_encode( array(
+					    'status'  => 200,
+					    'message' => "{$url} updated email to {$email}!"
+				    ), true );
+
+				    return;
+			    }
+			    $this->warn( "{$url} updated email to {$email}" );
+		    } else {
+
+			    $monitor = Monitor::firstOrCreate( [
+				    'url'                              => trim( $url, '/' ),
+				    'email'                            => trim( $email ),
+				    'look_for_string'                  => $lookForString ?? '',
+				    'uptime_check_method'              => isset( $lookForString ) ? 'get' : 'head',
+				    'certificate_check_enabled'        => $url->getScheme() === 'https',
+				    'uptime_check_interval_in_minutes' => config( 'uptime-monitor.uptime_check.run_interval_in_minutes' ),
+			    ] );
+
+			    if ( isset( $isApiCall ) && $isApiCall == true ) {
+				    echo json_encode( array(
+					    'status'  => 200,
+					    'message' => "{$monitor->url} will be monitored!"
+				    ), true );
+
+				    return;
+			    }
+			    $this->warn( "{$monitor->url} will be monitored!" );
 		    }
-		    $this->warn("{$monitor->url} will be monitored!");
 	    } catch ( \Exception $e ) {
 		    echo json_encode( array(
 			    'status' => 500,
