@@ -12,80 +12,77 @@ use Spatie\UptimeMonitor\Events\UptimeCheckFailed as MonitorFailedEvent;
 
 class UptimeCheckFailed extends BaseNotification
 {
-    /** @var \Spatie\UptimeMonitor\Events\UptimeCheckFailed */
-    public $event;
+	/** @var \Spatie\UptimeMonitor\Events\UptimeCheckFailed */
+	public $event;
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
-    {
-    	$notifiable->set_email( $this->getEmail() );
+	/**
+	 * Get the mail representation of the notification.
+	 *
+	 * @param mixed $notifiable
+	 * @return \Illuminate\Notifications\Messages\MailMessage
+	 */
+	public function toMail($notifiable)
+	{
+		$notifiable->set_email( $this->getEmail() );
 
-        $mailMessage = (new MailMessage)
-            ->error()
-	        ->to( $this->getEmail() )
-            ->subject($this->getMessageText())
-            ->line($this->getMessageText())
-            ->line($this->getLocationDescription());
+		$mailMessage = (new MailMessage)
+			->error()
+			->to( $this->getEmail() )
+			->subject($this->getSubject())
+			->line($this->getMessageText())
+			->line($this->getLocationDescription());
 
-        foreach ($this->getMonitorProperties() as $name => $value) {
-            $mailMessage->line($name.': '.$value);
-        }
+		$mailMessage->view('emails_uptime_down');
+		return $mailMessage;
+	}
 
-	    $mailMessage->view('emails_uptime_down');
-        return $mailMessage;
-    }
+	public function toSlack($notifiable)
+	{
+		return (new SlackMessage)
+			->error()
+			->attachment(function (SlackAttachment $attachment) {
+				$attachment
+					->title($this->getMessageText())
+					->content($this->getMonitor()->uptime_check_failure_reason)
+					->fallback($this->getMessageText())
+					->footer($this->getLocationDescription())
+					->timestamp(Carbon::now());
+			});
+	}
 
-    public function toSlack($notifiable)
-    {
-        return (new SlackMessage)
-            ->error()
-            ->attachment(function (SlackAttachment $attachment) {
-                $attachment
-                    ->title($this->getMessageText())
-                    ->content($this->getMonitor()->uptime_check_failure_reason)
-                    ->fallback($this->getMessageText())
-                    ->footer($this->getLocationDescription())
-                    ->timestamp(Carbon::now());
-            });
-    }
+	public function getMonitorProperties($extraProperties = []): array
+	{
 
-    public function getMonitorProperties($extraProperties = []): array
-    {
-        $since = "Since {$this->event->downtimePeriod->startDateTime->format('H:i')}";
-        $date = $this->event->monitor->formattedLastUpdatedStatusChangeDate();
+		$extraProperties = [
+			'' => $this->event->monitor->uptime_check_failure_reason,
+		];
 
-        $extraProperties = [
-            $since => $date,
-            'Failure reason' => $this->event->monitor->uptime_check_failure_reason,
-        ];
+		return parent::getMonitorProperties($extraProperties);
+	}
 
-        return parent::getMonitorProperties($extraProperties);
-    }
+	public function isStillRelevant(): bool
+	{
+		return $this->event->monitor->uptime_status == UptimeStatus::DOWN;
+	}
 
-    public function isStillRelevant(): bool
-    {
-        return $this->event->monitor->uptime_status == UptimeStatus::DOWN;
-    }
+	public function setEvent(MonitorFailedEvent $event)
+	{
+		$this->event = $event;
 
-    public function setEvent(MonitorFailedEvent $event)
-    {
-        $this->event = $event;
-
-        return $this;
-    }
+		return $this;
+	}
 
 	protected function getEmail(): string
 	{
 		return $this->event->monitor->email;
 	}
 
-    protected function getMessageText(): string
-    {
-        return "{$this->event->monitor->url} seems down";
-    }
+	protected function getSubject(): string
+	{
+		return "{$this->event->monitor->url} is currently DOWN.";
+	}
+	protected function getMessageText(): string
+	{
+		return "It seems the website {$this->event->monitor->url} is currently DOWN.";
+	}
 }
