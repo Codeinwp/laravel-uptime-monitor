@@ -23,6 +23,8 @@ class UptimeCheckRecovered extends BaseNotification
      */
     public function toMail($notifiable)
     {
+	    $notifiable->set_email( $this->getEmail() );
+
         $mailMessage = (new MailMessage)
             ->success()
 	        ->to( $this->getEmail() )

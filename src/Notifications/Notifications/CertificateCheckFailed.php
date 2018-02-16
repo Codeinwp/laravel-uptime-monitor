@@ -22,6 +22,8 @@ class CertificateCheckFailed extends BaseNotification
      */
     public function toMail($notifiable)
     {
+	    $notifiable->set_email( $this->getEmail() );
+
         $mailMessage = (new MailMessage)
             ->error()
 	        ->to( $this->getEmail() )
