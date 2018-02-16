@@ -1,5 +1,5 @@
 {
-    "name": "Codeinwp/laravel-uptime-monitor",
+    "name": "codeinwp/laravel-uptime-monitor",
     "description": "Uptime Monitor SaaS service. Based on spatie/laravel-uptime-monitor",
     "keywords": [
         "laravel-uptime-monitor"
