@@ -93,7 +93,14 @@ class CreateMonitor extends BaseCommand
 				    ])
 			    );
 
-			    var_dump( $res->getStatusCode() ); die();
+			    if( $res->getStatusCode() != 200 ) {
+				    echo json_encode( array(
+					    'status'  => 200,
+					    'message' => "{$monitor->url} did NOT respond, will NOT monitor!"
+				    ), true );
+
+				    return;
+			    }
 
 		    	$token =  md5( $url . $email );
 			    $data = array( 'is_confirm' => false, 'token'=> $token );
