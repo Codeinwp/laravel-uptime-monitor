@@ -6,6 +6,9 @@ use Spatie\Url\Url;
 use Spatie\UptimeMonitor\Models\Monitor;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use Egulias\EmailValidator\Validation\DNSCheckValidation;
+use Egulias\EmailValidator\Validation\SpoofCheckValidation;
+use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 
 class CreateMonitor extends BaseCommand
 {
@@ -40,7 +43,12 @@ class CreateMonitor extends BaseCommand
 		    }
 
 		    $validator = new EmailValidator();
-		    if ( ! isset( $email ) || $email === '' || !$validator->isValid( $email, new RFCValidation() ) ) {
+		    $multipleValidations = new MultipleValidationWithAnd([
+			    new RFCValidation(),
+			    new DNSCheckValidation(),
+			    new SpoofCheckValidation(),
+		    ]);
+		    if ( ! isset( $email ) || $email === '' || !$validator->isValid( $email, $multipleValidations ) ) {
 			    echo json_encode( array(
 				    'status' => 401,
 				    'message' => "No email provided or invalid email address."
