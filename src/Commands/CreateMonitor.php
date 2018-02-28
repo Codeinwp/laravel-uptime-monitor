@@ -2,6 +2,7 @@
 
 namespace Spatie\UptimeMonitor\Commands;
 
+use GrahamCampbell\GuzzleFactory\GuzzleFactory;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Url\Url;
 use Spatie\UptimeMonitor\Models\Monitor;
@@ -77,6 +78,22 @@ class CreateMonitor extends BaseCommand
 			    }
 			    $this->warn( "{$url} updated email to {$email}" );
 		    } else {
+
+			    $client = GuzzleFactory::make(
+				    compact('headers'),
+				    config('uptime-monitor.uptime-check.retry_connection_after_milliseconds', 100)
+			    );
+
+			    $res = $client->request(
+				    'head',
+				    $url,
+				    array_filter([
+					    'connect_timeout' => config('uptime-monitor.uptime_check.timeout_per_site'),
+					    'headers' => ['User-Agent' => config('uptime-monitor.uptime_check.user_agent')]
+				    ])
+			    );
+
+			    var_dump( $res ); die();
 
 		    	$token =  md5( $url . $email );
 			    $data = array( 'is_confirm' => false, 'token'=> $token );
