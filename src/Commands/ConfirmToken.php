@@ -48,7 +48,5 @@ class ConfirmToken extends BaseCommand
 			    return;
 		    }
 	    }
-
-	    $this->warn( "Check token called!" );
     }
 }
