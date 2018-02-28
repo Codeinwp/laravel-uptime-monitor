@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\UptimeMonitor\Models\Monitor;
 use Spatie\UptimeMonitor\MonitorRepository;
 
-class CheckUptime extends BaseCommand
+class ConfirmToken extends BaseCommand
 {
     protected $signature = 'monitor:confirm-token {--api} 
                             {--token= : Token to check and confirm}';
