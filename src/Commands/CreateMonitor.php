@@ -93,7 +93,7 @@ class CreateMonitor extends BaseCommand
 				    ])
 			    );
 
-			    var_dump( $res ); die();
+			    var_dump( $res->getStatusCode() ); die();
 
 		    	$token =  md5( $url . $email );
 			    $data = array( 'is_confirm' => false, 'token'=> $token );
