@@ -22,6 +22,7 @@
     ],
     "require": {
         "php": "^7.0",
+        "egulias/email-validator": "~2.1",
         "graham-campbell/guzzle-factory": "^2.1",
         "guzzlehttp/guzzle": "^6.3",
         "illuminate/console": "~5.5.0",

@@ -4,6 +4,8 @@ namespace Spatie\UptimeMonitor\Commands;
 
 use Spatie\Url\Url;
 use Spatie\UptimeMonitor\Models\Monitor;
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 
 class CreateMonitor extends BaseCommand
 {
@@ -37,10 +39,11 @@ class CreateMonitor extends BaseCommand
 			    return;
 		    }
 
-		    if ( ! isset( $email ) || $email === '' ) {
+		    $validator = new EmailValidator();
+		    if ( ! isset( $email ) || $email === '' || !$validator->isValid( $email, new RFCValidation() ) ) {
 			    echo json_encode( array(
 				    'status' => 401,
-				    'message' => "No email provided."
+				    'message' => "No email provided or invalid email address."
 			    ), true );
 			    return;
 		    }
