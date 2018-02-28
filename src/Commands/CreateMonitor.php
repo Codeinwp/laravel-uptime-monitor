@@ -78,7 +78,8 @@ class CreateMonitor extends BaseCommand
 			    $this->warn( "{$url} updated email to {$email}" );
 		    } else {
 
-			    $data = array( 'token'=> md5( $url . $email ) );
+		    	$token =  md5( $url . $email );
+			    $data = array( 'token'=> $token );
 			    var_dump( Mail::send('emails_confirm', $data, function( $message ) use ($email) {
 			    	$message->to( trim( $email ) )->subject('Confirm Email for Uptime Monitor');
 				    $message->from('monitor@themeisle.com','Uptime Monitor');
@@ -86,6 +87,7 @@ class CreateMonitor extends BaseCommand
 			    $monitor = Monitor::firstOrCreate( [
 				    'url'                              => trim( $url, '/' ),
 				    'email'                            => trim( $email ),
+				    'token'                            => $token,
 				    'look_for_string'                  => $lookForString ?? '',
 				    'uptime_check_method'              => isset( $lookForString ) ? 'get' : 'head',
 				    'certificate_check_enabled'        => $url->getScheme() === 'https',

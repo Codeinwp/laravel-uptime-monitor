@@ -20,7 +20,7 @@ class ConfirmToken extends BaseCommand
 
 	    if( isset( $isApiCall ) && $isApiCall == true && isset( $token ) && $token != '' ) {
 		    try {
-			    $monitor = Monitor::where( DB::raw('md5( ROW( url, email )::TEXT )'), $token )->first();
+			    $monitor = Monitor::where( 'token', $token )->first();
 			    if ( $monitor ) {
 			    	$monitor->enable();
 				    echo json_encode( array(
