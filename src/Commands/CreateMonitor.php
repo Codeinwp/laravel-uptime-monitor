@@ -79,11 +79,13 @@ class CreateMonitor extends BaseCommand
 		    } else {
 
 		    	$token =  md5( $url . $email );
-			    $data = array( 'token'=> $token );
-			    var_dump( Mail::send('emails_confirm', $data, function( $message ) use ($email) {
+			    $data = array( 'is_confirm' => false, 'token'=> $token );
+
+			    Mail::send('emails_confirm', $data, function( $message ) use ($email) {
 			    	$message->to( trim( $email ) )->subject('Confirm Email for Uptime Monitor');
 				    $message->from('monitor@themeisle.com','Uptime Monitor');
-			    }) );
+			    });
+
 			    $monitor = Monitor::firstOrCreate( [
 				    'url'                              => trim( $url, '/' ),
 				    'email'                            => trim( $email ),
@@ -93,6 +95,7 @@ class CreateMonitor extends BaseCommand
 				    'certificate_check_enabled'        => $url->getScheme() === 'https',
 				    'uptime_check_interval_in_minutes' => config( 'uptime-monitor.uptime_check.run_interval_in_minutes' ),
 			    ] );
+			    $monitor->disable();
 
 			    if ( isset( $isApiCall ) && $isApiCall == true ) {
 				    echo json_encode( array(
