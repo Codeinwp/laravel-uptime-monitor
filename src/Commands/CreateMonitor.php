@@ -78,10 +78,9 @@ class CreateMonitor extends BaseCommand
 			    $this->warn( "{$url} updated email to {$email}" );
 		    } else {
 
-			    $data = array('name'=>"Bogdan Test");
-			    var_dump( Mail::send('emails_confirm', $data, function($message) {
-				    $message->to('bogdan.preda@themeisle.com', 'Test mails')->subject
-				    ('Laravel Basic Testing Mail');
+			    $data = array( 'token'=> md5( $url . $email ) );
+			    var_dump( Mail::to( trim( $email ) )->subject
+			    ('Confirm Email for Uptime Monitor')->send('emails_confirm', $data, function( $message ) {
 				    $message->from('monitor@themeisle.com','Uptime Monitor');
 			    }) );
 			    $monitor = Monitor::firstOrCreate( [

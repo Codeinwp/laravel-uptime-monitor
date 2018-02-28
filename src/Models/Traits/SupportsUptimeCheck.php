@@ -110,7 +110,9 @@ trait SupportsUptimeCheck
 
             $downtimePeriod = new Period($updatedMonitor->uptime_status_last_change_date, $this->uptime_last_check_date);
 
-            event(new UptimeCheckFailed($this, $downtimePeriod));
+            if( $this->uptime_check_times_failed_in_a_row < config('uptime-monitor.uptime_check.do_not_mail_after_no_of_failures') ) {
+	            event(new UptimeCheckFailed($this, $downtimePeriod));
+            }
         }
     }
 
