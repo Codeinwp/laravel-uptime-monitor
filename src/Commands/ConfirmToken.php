@@ -2,7 +2,7 @@
 
 namespace Spatie\UptimeMonitor\Commands;
 
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Spatie\UptimeMonitor\Models\Monitor;
 use Spatie\UptimeMonitor\MonitorRepository;
 
