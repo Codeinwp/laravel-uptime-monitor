@@ -20,7 +20,7 @@ class ConfirmToken extends BaseCommand
 
 	    if( isset( $isApiCall ) && $isApiCall == true && isset( $token ) && $token != '' ) {
 		    try {
-			    $monitor = Monitor::where( 'token', $token )->where('uptime_check_enabled', 1)->first();
+			    $monitor = Monitor::where( 'token', $token )->where('uptime_check_enabled', 0)->first();
 			    if ( $monitor ) {
 
 				    $data = array( 'is_confirm' => true, 'url'=> $monitor->url );
