@@ -2,7 +2,7 @@
 
 namespace Spatie\UptimeMonitor\Commands;
 
-use Illuminate\Mail;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Url\Url;
 use Spatie\UptimeMonitor\Models\Monitor;
 use Egulias\EmailValidator\EmailValidator;
