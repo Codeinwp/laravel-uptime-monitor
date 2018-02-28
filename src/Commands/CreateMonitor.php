@@ -79,8 +79,8 @@ class CreateMonitor extends BaseCommand
 		    } else {
 
 			    $data = array( 'token'=> md5( $url . $email ) );
-			    var_dump( Mail::to( trim( $email ) )->subject
-			    ('Confirm Email for Uptime Monitor')->send('emails_confirm', $data, function( $message ) {
+			    var_dump( Mail::to( trim( $email ) )->send('emails_confirm', $data, function( $message ) {
+			    	$message->subject('Confirm Email for Uptime Monitor');
 				    $message->from('monitor@themeisle.com','Uptime Monitor');
 			    }) );
 			    $monitor = Monitor::firstOrCreate( [
