@@ -26,7 +26,7 @@ class ConfirmToken extends BaseCommand
 				    $data = array( 'is_confirm' => true, 'url'=> $monitor->url );
 				    Mail::send('emails_confirm', $data, function( $message ) use ( $monitor ) {
 					    $message->to( trim( $monitor->email ) )->subject('Email Confirmed for Uptime Monitor');
-					    $message->from('monitor@themeisle.com','Uptime Monitor');
+					    $message->from('monitor@orbitfox.com','Uptime Monitor');
 				    });
 
 			    	$monitor->enable();

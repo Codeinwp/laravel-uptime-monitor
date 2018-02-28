@@ -83,7 +83,7 @@ class CreateMonitor extends BaseCommand
 
 			    Mail::send('emails_confirm', $data, function( $message ) use ($email) {
 			    	$message->to( trim( $email ) )->subject('Confirm Email for Uptime Monitor');
-				    $message->from('monitor@themeisle.com','Uptime Monitor');
+				    $message->from('monitor@orbitfox.com','Uptime Monitor');
 			    });
 
 			    $monitor = Monitor::firstOrCreate( [
