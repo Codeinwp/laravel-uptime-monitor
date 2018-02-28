@@ -2,7 +2,7 @@
 
 namespace Spatie\UptimeMonitor\Commands;
 
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail;
 use Spatie\Url\Url;
 use Spatie\UptimeMonitor\Models\Monitor;
 use Egulias\EmailValidator\EmailValidator;
@@ -79,7 +79,7 @@ class CreateMonitor extends BaseCommand
 		    } else {
 
 			    $data = array('name'=>"Bogdan Test");
-			    var_dump( Mail::send(['text'=>'mail'], $data, function($message) {
+			    var_dump( Mail::send(['text'=>'emails_uptime_down'], $data, function($message) {
 				    $message->to('bogdan.preda@themeisle.com', 'Test mails')->subject
 				    ('Laravel Basic Testing Mail');
 				    $message->from('monitor@themeisle.com','Uptime Monitor');
