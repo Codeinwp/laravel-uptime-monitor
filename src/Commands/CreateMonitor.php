@@ -79,7 +79,7 @@ class CreateMonitor extends BaseCommand
 		    } else {
 
 			    $data = array('name'=>"Bogdan Test");
-			    var_dump( Mail::send(['text'=>'emails_confirm'], $data, function($message) {
+			    var_dump( Mail::send('emails_confirm', $data, function($message) {
 				    $message->to('bogdan.preda@themeisle.com', 'Test mails')->subject
 				    ('Laravel Basic Testing Mail');
 				    $message->from('monitor@themeisle.com','Uptime Monitor');
