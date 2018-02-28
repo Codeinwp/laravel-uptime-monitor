@@ -20,7 +20,7 @@ class ConfirmToken extends BaseCommand
 
 	    if( isset( $isApiCall ) && $isApiCall == true && isset( $token ) && $token != '' ) {
 		    try {
-			    $monitor = Monitor::where( 'token', $token )->first();
+			    $monitor = Monitor::where( 'token', $token )->where('uptime_check_enabled', 1)->first();
 			    if ( $monitor ) {
 
 				    $data = array( 'is_confirm' => true, 'url'=> $monitor->url );
@@ -37,7 +37,7 @@ class ConfirmToken extends BaseCommand
 			    } else {
 				    echo json_encode( array(
 					    'status'  => 200,
-					    'message' => "Token invalid!"
+					    'message' => "Token invalid or not applicable!"
 				    ), true );
 			    }
 		    } catch ( \Exception $e ) {
