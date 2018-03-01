@@ -32,7 +32,7 @@ class ConfirmToken extends BaseCommand
 
 			    	$monitor->enable();
 
-			    	return "{$monitor->url} activated, email confirmed!";
+			    	echo "{$monitor->url} activated, email confirmed!";
 
 //				    echo json_encode( array(
 //					    'status'  => 200,
@@ -40,7 +40,7 @@ class ConfirmToken extends BaseCommand
 //				    ), true );
 			    } else {
 
-			    	return "Token invalid or not applicable!";
+				    echo "Token invalid or not applicable!";
 //				    echo json_encode( array(
 //					    'status'  => 200,
 //					    'message' => "Token invalid or not applicable!"
