@@ -32,21 +32,10 @@ class ConfirmToken extends BaseCommand
 
 			    	$monitor->enable();
 
-			    	echo "{$monitor->url} activated, email confirmed!";
-			    	return "{$monitor->url} activated, email confirmed!";
-
-//				    echo json_encode( array(
-//					    'status'  => 200,
-//					    'message' => "{$monitor->url} activated, email confirmed!"
-//				    ), true );
+				    $this->info( "{$monitor->url} activated, email confirmed!" );
 			    } else {
 
-				    echo "Token invalid or not applicable!";
-				    return "Token invalid or not applicable!";
-//				    echo json_encode( array(
-//					    'status'  => 200,
-//					    'message' => "Token invalid or not applicable!"
-//				    ), true );
+				    $this->warn( "Token invalid or not applicable!" );
 			    }
 		    } catch ( \Exception $e ) {
 			    echo json_encode( array(
