@@ -105,10 +105,14 @@ class CreateMonitor extends BaseCommand
 		    	$token =  md5( $url . $email );
 			    $data = array( 'is_confirm' => false, 'token'=> $token, 'url' => $url );
 
-			    Mail::send('emails_confirm', $data, function( $message ) use ($email) {
-			    	$message->to( trim( $email ) )->subject('Confirm Email for Uptime Monitor');
-				    $message->from('monitor@orbitfox.com','Uptime Monitor');
-			    });
+			    $monitor = Monitor::where('url', $url)->where('email', trim( $email ))->first();
+
+			    if( ! $monitor ) {
+				    Mail::send('emails_confirm', $data, function( $message ) use ($email) {
+					    $message->to( trim( $email ) )->subject('Confirm Email for Uptime Monitor');
+					    $message->from('monitor@orbitfox.com','Uptime Monitor');
+				    });
+			    }
 
 			    $monitor = Monitor::firstOrCreate( [
 				    'url'                              => trim( $url, '/' ),

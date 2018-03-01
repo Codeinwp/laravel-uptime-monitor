@@ -3,6 +3,7 @@
 namespace Spatie\UptimeMonitor\Commands;
 
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\View;
 use Spatie\UptimeMonitor\Models\Monitor;
 use Spatie\UptimeMonitor\MonitorRepository;
 
@@ -30,15 +31,20 @@ class ConfirmToken extends BaseCommand
 				    });
 
 			    	$monitor->enable();
-				    echo json_encode( array(
-					    'status'  => 200,
-					    'message' => "{$monitor->url} activated, email confirmed!"
-				    ), true );
+
+			    	return "{$monitor->url} activated, email confirmed!";
+
+//				    echo json_encode( array(
+//					    'status'  => 200,
+//					    'message' => "{$monitor->url} activated, email confirmed!"
+//				    ), true );
 			    } else {
-				    echo json_encode( array(
-					    'status'  => 200,
-					    'message' => "Token invalid or not applicable!"
-				    ), true );
+
+			    	return "Token invalid or not applicable!";
+//				    echo json_encode( array(
+//					    'status'  => 200,
+//					    'message' => "Token invalid or not applicable!"
+//				    ), true );
 			    }
 		    } catch ( \Exception $e ) {
 			    echo json_encode( array(
