@@ -51,7 +51,7 @@ class ConfirmToken extends BaseCommand
 				    'status' => 500,
 				    'message' => $e->getMessage()
 			    ), true );
-			    return;
+			    return 1;
 		    }
 	    }
     }
